@@ -8,9 +8,7 @@ This software has been created purely for the purposes of academic research and 
 
 ## Usage
 ```
-usage: bleeder.py [-h] [-c COUNT] [-fc] [-tc THREAD_COUNT] [-nv] [-ni] [-v]
-                  [-e]
-                  url
+usage: bleeder.py [-h] [-c COUNT] [-fc] [-tc THREAD_COUNT] [-nv] [-ni] [-v] [-e] url
 
 positional arguments:
   url                   full URL (including http(s)) to be scanned
