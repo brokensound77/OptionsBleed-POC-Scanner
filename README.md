@@ -1,6 +1,8 @@
 # OptionsBleed-POC-Scanner
 OptionsBleed (CVE-2017-9798) PoC / Scanner
 
+More information coming soon...
+
 ## Disclaimer
 This software has been created purely for the purposes of academic research and for the development of effective defensive techniques, and is not intended to be used to attack systems except where explicitly authorized. Project maintainers are not responsible or liable for misuse of the software. Use responsibly.
 
