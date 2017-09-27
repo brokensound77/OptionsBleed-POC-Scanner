@@ -24,7 +24,7 @@ optional arguments:
                         self-signed certs)
   -ni, --no-ignore      does NOT ignore ssl warnings (default: ignored)
   -v, --verbose         print all headers
-  -e, --errors          prints
+  -e, --errors          prints all errors
 ```
 
 ## Simple Usage
