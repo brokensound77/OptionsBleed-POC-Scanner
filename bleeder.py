@@ -9,6 +9,8 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 parser = argparse.ArgumentParser()
 parser.add_argument('url', type=str, help='full URL (including http(s)) to be scanned')
 parser.add_argument('-c', '--count', type=int, default=1000, help='number of times to scan (default: 1000)')
+parser.add_argument('-fc', '--force-custom', action='store_true',
+                    help='forces the scan to only attempt using custom verb method (default: try OPTIONS then custom)')
 parser.add_argument('-tc', '--thread-count', type=int, default=500, help='max concurrent thread count (default: 500)')
 parser.add_argument('-nv', '--no-verify', action='store_false', default=True,
                     help='does not verify ssl connection (may be necessary for self-signed certs)')
@@ -23,23 +25,24 @@ if not args.no_ignore:
 
 def does_it_bleed(url, verify=True):
     header = {'user-agent': 'Mozilla'}
-    try:
-        print '[+] checking OPTIONS method'
-        r = requests.options(url, headers=header, verify=verify, timeout=4)
-        low_headers = map(lambda x: x.lower(), r.headers.keys())
-        if args.verbose:
-            print '[*] VERBOSE: \n\t-raw OPTIONS headers: \n\t{0} \n\t-low OPTIONS headers: \n\t{1}'.format(
-                ' '.join(r.headers.keys()), ' '.join(low_headers))
-        if 'allow' in low_headers:
-            print '[+] allow headers detected in OPTIONS response'
-            return 'option'
-    except requests.exceptions.ConnectionError:
-        print '[!] connection error!'
-        pass
-    except requests.exceptions.ReadTimeout:
-        print '[!] connection timed out!'
-        pass
-    #TODO: SSL verify exception
+    if not args.force_custom:
+        try:
+            print '[+] checking OPTIONS method'
+            r = requests.options(url, headers=header, verify=verify, timeout=4)
+            low_headers = map(lambda x: x.lower(), r.headers.keys())
+            if args.verbose:
+                print '[*] VERBOSE: \n\t-raw OPTIONS headers: \n\t{0} \n\t-low OPTIONS headers: \n\t{1}'.format(
+                    ' '.join(r.headers.keys()), ' '.join(low_headers))
+            if 'allow' in low_headers:
+                print '[+] allow headers detected in OPTIONS response'
+                return 'option'
+        except requests.exceptions.ConnectionError:
+            print '[!] connection error!'
+            pass
+        except requests.exceptions.ReadTimeout:
+            print '[!] connection timed out!'
+            pass
+        #TODO: SSL verify exception
 
     try:
         print '[+] checking custom (PULL) method'
