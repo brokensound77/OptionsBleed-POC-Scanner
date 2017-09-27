@@ -14,7 +14,7 @@ parser.add_argument('-nv', '--no-verify', action='store_false', default=True,
                     help='does not verify ssl connection (may be necessary for self-signed certs)')
 parser.add_argument('-ni', '--no-ignore', action='store_true', help='does NOT ignore ssl warnings (default: ignored)')
 parser.add_argument('-v', '--verbose', action='store_true', help='print all headers')
-parser.add_argument('-e', '--errors', action='store_true', help='prints ')
+parser.add_argument('-e', '--errors', action='store_true', help='prints all errors')
 args = parser.parse_args()
 
 if not args.no_ignore:
