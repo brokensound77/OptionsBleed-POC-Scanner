@@ -63,7 +63,7 @@ def bleed(url, method='option', verify=True):
     except Exception as e:
         errors.append(str(e.message))
         return
-    results.append(r.headers['Allow'])
+    results.append(r.headers.get('Allow'))
 
 
 def hemorrhage(count, bleed_method, thread_count=None):
