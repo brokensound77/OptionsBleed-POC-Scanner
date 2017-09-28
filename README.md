@@ -8,8 +8,7 @@ This software has been created purely for the purposes of academic research and 
 
 ## Usage
 ```
-python bleeder.py -h
-usage: bleeder.py [-h] [-c COUNT] [-tc THREAD_COUNT] [-nv] [-ni] [-v] [-e] url
+usage: bleeder.py [-h] [-c COUNT] [-fc] [-tc THREAD_COUNT] [-nv] [-ni] [-v] [-e] url
 
 positional arguments:
   url                   full URL (including http(s)) to be scanned
@@ -18,6 +17,8 @@ optional arguments:
   -h, --help            show this help message and exit
   -c COUNT, --count COUNT
                         number of times to scan (default: 1000)
+  -fc, --force-custom   forces the scan to only attempt using custom verb
+                        method (default: try OPTIONS then custom)
   -tc THREAD_COUNT, --thread-count THREAD_COUNT
                         max concurrent thread count (default: 500)
   -nv, --no-verify      does not verify ssl connection (may be necessary for
