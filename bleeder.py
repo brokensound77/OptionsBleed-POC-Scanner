@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('url', type=str, help='full URL (including http(s)) to be scanned')
 parser.add_argument('-c', '--count', type=int, default=1000, help='number of times to scan (default: 1000)')
 parser.add_argument('-f', '--force', type=str, choices={'option', 'custom'},
-                    help='forces the scan to only attempt using custom verb method (default: try OPTIONS then custom)')
+            help='forces the scan to attempt using custom verb method OR OPTIONS (default: try OPTIONS THEN custom)')
 parser.add_argument('-tc', '--thread-count', type=int, default=500, help='max concurrent thread count (default: 500)')
 parser.add_argument('-nv', '--no-verify', action='store_false', default=True,
                     help='does not verify ssl connection (may be necessary for self-signed certs)')
