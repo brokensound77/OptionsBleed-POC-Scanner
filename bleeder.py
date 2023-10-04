@@ -73,6 +73,7 @@ def bleed(url: str, method='option', verify=True):
 
 
 def hemorrhage(count, bleed_method, thread_count=None):
+    count = int(count)
     for i in range(count):
         t = Thread(target=bleed, args=(args.url, bleed_method, not args.no_verify))
         threads.append(t)
